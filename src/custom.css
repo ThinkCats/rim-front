@@ -1,0 +1,22 @@
+.Container {
+    align-items: center;
+    background-color: #fff;
+    color: #000;
+    color-scheme: light;
+    display: flex;
+    height: 100%;
+    justify-content: space-between;
+    position: absolute;
+    width: 100%;
+}
+
+.leftDivContainer {
+    border-right: solid #e7e7e7;
+    height: 100%;
+    width: 40%;
+}
+
+.rightDivContainer {
+    height: 100%;
+    width: 60%;
+}
