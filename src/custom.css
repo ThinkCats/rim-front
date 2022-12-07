@@ -19,4 +19,19 @@
 .rightDivContainer {
     height: 100%;
     width: 60%;
+    margin: 10pt;
+}
+
+.messageContainer {
+    height: 90%;
+}
+
+.inputContainer {
+    height: 10%;
+}
+
+.inputStyle {
+    border-color: gainsboro;
+    border-style: solid;
+    border-radius: 4pt;
 }

@@ -17,7 +17,12 @@ function App() {
         <ChatListView />
       </div>
       <div className="rightDivContainer">
-        <MessageListView />
+        <div className="messageContainer">
+          <MessageListView />
+        </div>
+        <div className="inputContainer">
+          <InputView />
+        </div>
       </div>
     </div>
   );
@@ -67,8 +72,16 @@ function MessageListView() {
         date={new Date()}
         replyButton={true}
       />
-      <Input
-        placeholder="Type here..."
+
+    </div>
+  )
+}
+
+function InputView() {
+  return (
+    <div>
+      <Input className="inputStyle"
+        placeholder="请输入内容..."
         multiline={true}
         rightButtons={send_btn()}
       />
