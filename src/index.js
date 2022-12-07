@@ -4,11 +4,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "react-chat-elements/dist/main.css"
 import "./custom.css";
+import MessageStore from './MessageStore';
+
+const store = new MessageStore();
+store.init();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <App store={store} />
   </React.StrictMode>
 );
 

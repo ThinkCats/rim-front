@@ -1,15 +1,19 @@
+import { observer } from "mobx-react-lite";
 import { MessageBox } from "react-chat-elements";
 import { ChatList } from "react-chat-elements";
 import { Input } from 'react-chat-elements';
 import { Button } from "react-chat-elements";
 import { Navbar } from "react-chat-elements"
 
-function App() {
+const App = observer(({ store }) => {
+
+  console.log(store.chatList);
+
   return (
     <div className="Container">
       <div className="leftDivContainer">
         <Navbar
-          left=<div>Logo</div>
+          left=<div>{store.testLogo}</div>
           center=<div>聊天</div>
           right=<div>联系人</div>
           type="light"
@@ -26,7 +30,7 @@ function App() {
       </div>
     </div>
   );
-}
+})
 
 function ChatListView() {
   return (
