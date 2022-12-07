@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from './other/reportWebVitals';
 import "react-chat-elements/dist/main.css"
-import "./custom.css";
+import "./style/custom.css";
 import MessageStore from './MessageStore';
 
 const store = new MessageStore();
