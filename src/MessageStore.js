@@ -1,4 +1,5 @@
 import { action, computed, makeObservable, observable } from "mobx"
+import instance from "./Client"
 
 
 
@@ -22,7 +23,14 @@ class MessageStore {
 
     init() {
         //query rest
-        console.log("query from server....");
+        instance.post('/message/chat/list', {
+            "uid": 1,
+            "page": 1,
+            "size": 10
+        }).then(response => {
+            console.log("chat list result:", response);
+        });
+
         this.chatList.push('hehehe');
     }
 }
