@@ -4,7 +4,7 @@ import App from './App';
 import reportWebVitals from './other/reportWebVitals';
 import "react-chat-elements/dist/main.css"
 import "./style/custom.css";
-import MessageStore from './MessageStore';
+import MessageStore from './store';
 
 const store = new MessageStore();
 store.fetchChatList();

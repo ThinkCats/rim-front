@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable } from "mobx"
-import instance from "./Client"
+import instance from "./api"
 import { stringToDate } from "./utils"
 
 
