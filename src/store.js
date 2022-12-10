@@ -1,25 +1,34 @@
+import { toHaveAccessibleDescription } from "@testing-library/jest-dom/dist/matchers"
 import { action, computed, makeObservable, observable } from "mobx"
 import instance from "./api"
-import { stringToDate } from "./utils"
+import { stringToDate, uuidv4 } from "./utils"
 import ws from "./ws"
 
 class MessageStore {
     chatList = []
     messageList = []
+
+    activeChat = {}
+
     login = {}
     ws = {}
+
+    inputMsg = ''
 
     constructor() {
         makeObservable(this, {
             chatList: observable,
             messageList: observable,
             login: observable,
+            inputMsg: observable,
 
             computedChatList: computed,
             computedMessageList: computed,
 
             fetchChatList: action,
             fetchMessageList: action,
+            updateInputMsg: action,
+            selectChat: action,
         })
 
         this.ws = ws;
@@ -59,7 +68,37 @@ class MessageStore {
     }
 
     sendWsMsg(msg) {
-        this.ws.send(JSON.stringify(msg));
+        let body = {
+            "event": "Msg",
+            "body": {
+                "kind": "Text",
+                "content": msg,
+                "uid": this.login.uid,
+                "gid": this.activeChat.id,
+                "clientMsgId": uuidv4()
+            }
+        };
+        this.ws.send(JSON.stringify(body));
+        //add compute msg
+        console.log('to add compute')
+        this.messageList.push({
+            "msg": {
+                uid: this.login.uid,
+                kind: "Text",
+                content: msg,
+            },
+            "user": {
+                name: this.login.name,
+            }
+        });
+    }
+
+    updateInputMsg(data) {
+        this.inputMsg = data;
+    }
+
+    selectChat(chat) {
+        this.activeChat = chat;
     }
 
     fetchMessageList(param) {
@@ -80,7 +119,7 @@ class MessageStore {
     }
 
     initLogin() {
-        this.login = {uid: 2, avatar: "xxxx"};
+        this.login = {uid: 2, name: "达必马", avatar: "xxxx"};
     }
 }
 

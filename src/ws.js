@@ -13,7 +13,7 @@ ws.onopen = (event) => {
             "clientMsgId": "lalalalal"
         }
     };
-      ws.send(JSON.stringify(login));
+    ws.send(JSON.stringify(login));
 }
 
 ws.onmessage = (event) => {

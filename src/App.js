@@ -27,7 +27,7 @@ const App = observer(({ store }) => {
           <MessageListView store={store} />
         </div>
         <div className="inputContainer">
-          <InputView />
+          <InputView store={store} />
         </div>
       </div>
     </div>
@@ -35,9 +35,9 @@ const App = observer(({ store }) => {
 })
 
 const ChatListView = observer(({ store }) => {
-
   let selectChatGroup = (data) => {
     console.log('click:', data);
+    store.selectChat(data);
     store.fetchMessageList({ gid: data.id, uid: data.uid, page: 1, size: 10 });
   }
 
@@ -59,7 +59,6 @@ const MessageListView = observer(({ store }) => {
   };
   useEffect(scrollToBottom, [store.computedMessageList]);
 
-
   return (
     <div className="messageListContainer">
       <MessageList
@@ -73,22 +72,30 @@ const MessageListView = observer(({ store }) => {
   )
 });
 
-function InputView() {
+const InputView = observer(({ store }) => {
+
+  const inputRef = useRef(null);
+
+  const handleSubmit = () => {
+    store.sendWsMsg(store.inputMsg);
+    inputRef.target = {};
+    //TODO reset
+    inputRef.value = '';
+    inputRef.defaultValue = '';
+  }
+
   return (
     <div>
       <Input className="inputStyle"
         placeholder="请输入内容..."
         multiline={true}
-        rightButtons={send_btn()}
+        rightButtons={<Button text={"Send"} onClick={handleSubmit} title="Send" />}
+        onChange={(data) => store.updateInputMsg(data.target.value)}
+        referance={inputRef}
+        // inputRef={ref => this.nativeTextInput = ref}
       />
     </div>
   )
-}
-
-function send_btn() {
-  return (
-    <div><Button text={"Send"} onClick={() => alert("Sending...")} title="Send" /></div>
-  )
-}
+});
 
 export default App;
