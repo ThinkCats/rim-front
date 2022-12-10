@@ -22,6 +22,14 @@
     margin: 10pt;
 }
 
+.chatListContainer {
+    height: 90%; 
+}
+
+.navBarContainer {
+    height: 10%; 
+}
+
 .messageContainer {
     height: 90%;
 }

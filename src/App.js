@@ -6,23 +6,24 @@ import { Button } from "react-chat-elements";
 import { Navbar } from "react-chat-elements"
 
 const App = observer(({ store }) => {
-
-  console.log(store.chatList);
-
   return (
     <div className="Container">
       <div className="leftDivContainer">
-        <Navbar
-          left=<div>{store.testLogo}</div>
-          center=<div>聊天</div>
-          right=<div>联系人</div>
-          type="light"
-        />
-        <ChatListView />
+        <div className="chatListContainer">
+          <ChatListView store={store} />
+        </div>
+        <div className="navBarContainer">
+          <Navbar
+            left=<div>通话</div>
+            center=<div>聊天</div>
+            right=<div>联系人</div>
+            type="light"
+          />
+        </div>
       </div>
       <div className="rightDivContainer">
         <div className="messageContainer">
-          <MessageListView />
+          <MessageListView store={store} />
         </div>
         <div className="inputContainer">
           <InputView />
@@ -32,24 +33,31 @@ const App = observer(({ store }) => {
   );
 })
 
-function ChatListView() {
+const ChatListView = observer(({ store }) => {
+
+  console.log(store.computedChatList);
+
+
   return (
     <ChatList
       className='chat-list'
-      dataSource={[
-        {
-          avatar: 'https://avatars.githubusercontent.com/u/80540635?v=4',
-          alt: 'kursat_avatar',
-          title: '小韦',
-          subtitle: "你说啥 ?",
-          date: new Date(),
-          unread: 1,
-        }
-      ]} />
+      dataSource={store.computedChatList}
+      // dataSource={[
+      //   {
+      //     avatar: 'https://avatars.githubusercontent.com/u/80540635?v=4',
+      //     alt: 'kursat_avatar',
+      //     title: '小韦',
+      //     subtitle: "你说啥 ?",
+      //     date: new Date(),
+      //     unread: 1,
+      //   }
+      // ]}
+       />
   )
-}
+});
 
-function MessageListView() {
+const MessageListView = observer(({ store }) => {
+  let chatList = store.chatList;
   return (
     <div>
       <MessageBox
@@ -79,7 +87,7 @@ function MessageListView() {
 
     </div>
   )
-}
+});
 
 function InputView() {
   return (
