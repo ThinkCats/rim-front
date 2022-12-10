@@ -7,7 +7,7 @@ import "./style/custom.css";
 import MessageStore from './MessageStore';
 
 const store = new MessageStore();
-store.init();
+store.fetchChatList();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

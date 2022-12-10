@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { MessageBox } from "react-chat-elements";
+import { MessageBox, MessageList } from "react-chat-elements";
 import { ChatList } from "react-chat-elements";
 import { Input } from 'react-chat-elements';
 import { Button } from "react-chat-elements";
@@ -35,54 +35,30 @@ const App = observer(({ store }) => {
 
 const ChatListView = observer(({ store }) => {
 
-  console.log(store.computedChatList);
-
+  let selectChatGroup = (data) => {
+    console.log('click:', data);
+    store.fetchMessageList({ gid: data.id, uid: data.uid, page: 1, size: 10 });
+  }
 
   return (
     <ChatList
       className='chat-list'
       dataSource={store.computedChatList}
-      // dataSource={[
-      //   {
-      //     avatar: 'https://avatars.githubusercontent.com/u/80540635?v=4',
-      //     alt: 'kursat_avatar',
-      //     title: '小韦',
-      //     subtitle: "你说啥 ?",
-      //     date: new Date(),
-      //     unread: 1,
-      //   }
-      // ]}
-       />
+      onClick={selectChatGroup}
+    />
   )
 });
 
 const MessageListView = observer(({ store }) => {
-  let chatList = store.chatList;
+  console.log('compute msg list:', store.computedMessageList);
+
   return (
     <div>
-      <MessageBox
-        position='left'
-        title='小韦'
-        type='text'
-        text="鼓掌.gif"
-        date={new Date()}
-        replyButton={true}
-      />
-
-      <MessageBox
-        position="right"
-        title="王大哥"
-        type="text"
-        text="在干啥？"
-        date={new Date()}
-      />
-      <MessageBox
-        position='left'
-        title='小韦'
-        type='text'
-        text="你说啥？"
-        date={new Date()}
-        replyButton={true}
+      <MessageList
+        className='message-list'
+        lockable={true}
+        toBottomHeight={'100%'}
+        dataSource={store.computedMessageList}
       />
 
     </div>
