@@ -1,18 +1,19 @@
 import { action, computed, makeObservable, observable } from "mobx"
 import instance from "./api"
 import { stringToDate } from "./utils"
-
-
+import ws from "./ws"
 
 class MessageStore {
     chatList = []
     messageList = []
     login = {}
+    ws = {}
 
     constructor() {
         makeObservable(this, {
             chatList: observable,
             messageList: observable,
+            login: observable,
 
             computedChatList: computed,
             computedMessageList: computed,
@@ -21,7 +22,7 @@ class MessageStore {
             fetchMessageList: action,
         })
 
-        this.fetchChatList();
+        this.ws = ws;
     }
 
     get computedChatList() {
@@ -47,7 +48,7 @@ class MessageStore {
         for(let data of this.messageList) {
             console.log('msg data:', data);
             let msg = { 
-                position: (data.user.id == this.login.uid) ? 'right':'left',
+                position: (data.msg.uid === this.login.uid) ? 'right':'left',
                 type: data.msg.kind != null ? 'text' : 'todo',
                 title: data.user.name,
                 text: data.msg.content,
@@ -57,6 +58,10 @@ class MessageStore {
         return result;
     }
 
+    sendWsMsg(msg) {
+        this.ws.send(JSON.stringify(msg));
+    }
+
     fetchMessageList(param) {
         instance.post('/message/history', param).then(response => {
             this.messageList = response.data.data
@@ -64,9 +69,8 @@ class MessageStore {
     }
 
     fetchChatList() {
-        //query rest
         instance.post('/message/chat/list', {
-            "uid": 1,
+            "uid": this.login.uid,
             "page": 1,
             "size": 10
         }).then(response => {
@@ -76,7 +80,7 @@ class MessageStore {
     }
 
     initLogin() {
-        this.login = {uid: 1, avatar: "xxxx"};
+        this.login = {uid: 2, avatar: "xxxx"};
     }
 }
 

@@ -36,6 +36,10 @@
     display: flex;
 }
 
+.messageListContainer {
+    width: 100%;
+}
+
 .inputContainer {
     height: 10%;
 }

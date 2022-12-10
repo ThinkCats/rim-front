@@ -61,7 +61,7 @@ const MessageListView = observer(({ store }) => {
 
 
   return (
-    <div>
+    <div className="messageListContainer">
       <MessageList
         className='message-list'
         lockable={false}
