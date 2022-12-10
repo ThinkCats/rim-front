@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { useEffect, useRef } from "react";
 import { MessageBox, MessageList } from "react-chat-elements";
 import { ChatList } from "react-chat-elements";
 import { Input } from 'react-chat-elements';
@@ -52,15 +53,22 @@ const ChatListView = observer(({ store }) => {
 const MessageListView = observer(({ store }) => {
   console.log('compute msg list:', store.computedMessageList);
 
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(scrollToBottom, [store.computedMessageList]);
+
+
   return (
     <div>
       <MessageList
         className='message-list'
-        lockable={true}
+        lockable={false}
         toBottomHeight={'100%'}
         dataSource={store.computedMessageList}
       />
-
+      <div ref={messagesEndRef} />
     </div>
   )
 });

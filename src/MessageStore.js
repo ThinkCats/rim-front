@@ -46,7 +46,7 @@ class MessageStore {
         let result = [];
         for(let data of this.messageList) {
             console.log('msg data:', data);
-            let msg = {
+            let msg = { 
                 position: (data.user.id == this.login.uid) ? 'right':'left',
                 type: data.msg.kind != null ? 'text' : 'todo',
                 title: data.user.name,

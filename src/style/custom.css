@@ -32,6 +32,8 @@
 
 .messageContainer {
     height: 90%;
+    overflow: scroll;
+    display: flex;
 }
 
 .inputContainer {
