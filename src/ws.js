@@ -1,3 +1,4 @@
+import store from "./store";
 
 const ws = new WebSocket("ws://127.0.0.1:3012")
 
@@ -17,7 +18,7 @@ ws.onopen = (event) => {
 }
 
 ws.onmessage = (event) => {
-    console.log(event.data);
+    store.newMessageArrive(event.data);
 }
 
 

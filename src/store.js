@@ -7,8 +7,8 @@ import ws from "./ws"
 class MessageStore {
     chatList = []
     messageList = []
-
     activeChat = {}
+    groupUsers = []
 
     login = {}
     ws = {}
@@ -21,6 +21,7 @@ class MessageStore {
             messageList: observable,
             login: observable,
             inputMsg: observable,
+            groupUsers: observable,
 
             computedChatList: computed,
             computedMessageList: computed,
@@ -29,6 +30,8 @@ class MessageStore {
             fetchMessageList: action,
             updateInputMsg: action,
             selectChat: action,
+            newMessageArrive: action,
+            sendWsMsg: action,
         })
 
         this.ws = ws;
@@ -54,10 +57,10 @@ class MessageStore {
 
     get computedMessageList() {
         let result = [];
-        for(let data of this.messageList) {
-            console.log('msg data:', data);
-            let msg = { 
-                position: (data.msg.uid === this.login.uid) ? 'right':'left',
+        console.log("compute msg list:{}", this.messageList);
+        for (let data of this.messageList) {
+            let msg = {
+                position: (data.msg.uid === this.login.uid) ? 'right' : 'left',
                 type: data.msg.kind != null ? 'text' : 'todo',
                 title: data.user.name,
                 text: data.msg.content,
@@ -99,7 +102,37 @@ class MessageStore {
 
     selectChat(chat) {
         this.activeChat = chat;
+        //fetch user info
+        instance.get("/group/user/get?gid="+ chat.id).then(response => {
+            console.log("set group user state:", response.data.data)
+            this.groupUsers = response.data.data
+        });
     }
+
+    newMessageArrive(msg) {
+        console.log("new msg arrived:", msg);
+        let msgJson = JSON.parse(msg);
+        if (msgJson.event == 'Msg') {
+            console.log("push msg:",msgJson);
+            let userName = '';
+            for (const ele of this.groupUsers) {
+                if (ele.user.id === msgJson.body.uid) {
+                    userName = ele.user.name;
+                }
+            } 
+            this.messageList.push({
+                "msg": {
+                    uid: msgJson.body.uid,
+                    kind: msgJson.body.kind,
+                    content: msgJson.body.content,
+                },
+                "user": {
+                    name: userName,
+                }
+            });
+        }
+    }
+
 
     fetchMessageList(param) {
         instance.post('/message/history', param).then(response => {
@@ -111,7 +144,7 @@ class MessageStore {
         instance.post('/message/chat/list', {
             "uid": this.login.uid,
             "page": 1,
-            "size": 10
+            "size": 5
         }).then(response => {
             console.log("chat list result:", response);
             this.chatList = response.data.data;
@@ -119,8 +152,10 @@ class MessageStore {
     }
 
     initLogin() {
-        this.login = {uid: 2, name: "达必马", avatar: "xxxx"};
+        this.login = { uid: 2, name: "达必马", avatar: "xxxx" };
     }
 }
 
-export default MessageStore;
+const store = new MessageStore();
+
+export default store;

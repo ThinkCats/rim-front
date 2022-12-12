@@ -38,7 +38,7 @@ const ChatListView = observer(({ store }) => {
   let selectChatGroup = (data) => {
     console.log('click:', data);
     store.selectChat(data);
-    store.fetchMessageList({ gid: data.id, uid: data.uid, page: 1, size: 10 });
+    store.fetchMessageList({ gid: data.id, uid: data.uid, page: 1, size: 5 });
   }
 
   return (
@@ -92,7 +92,6 @@ const InputView = observer(({ store }) => {
         rightButtons={<Button text={"Send"} onClick={handleSubmit} title="Send" />}
         onChange={(data) => store.updateInputMsg(data.target.value)}
         referance={inputRef}
-        // inputRef={ref => this.nativeTextInput = ref}
       />
     </div>
   )

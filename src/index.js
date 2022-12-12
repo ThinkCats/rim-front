@@ -4,12 +4,10 @@ import App from './App';
 import reportWebVitals from './other/reportWebVitals';
 import "react-chat-elements/dist/main.css"
 import "./style/custom.css";
-import MessageStore from './store';
+import store from './store';
 
-const store = new MessageStore();
 store.initLogin();
 store.fetchChatList();
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
