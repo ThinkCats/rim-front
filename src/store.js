@@ -22,6 +22,7 @@ class MessageStore {
             login: observable,
             inputMsg: observable,
             groupUsers: observable,
+            activeChat: observable,
 
             computedChatList: computed,
             computedMessageList: computed,
@@ -48,7 +49,7 @@ class MessageStore {
                 title: data.user.name,
                 subtitle: data.msg.content,
                 date: stringToDate(data.msg.createTime),
-                unread: 2,
+                unread: data.unread,
             }
             result.push(computed_chat);
         }
@@ -57,6 +58,9 @@ class MessageStore {
 
     get computedMessageList() {
         let result = [];
+        if (Object.keys(this.activeChat).length === 0) {
+            return result;
+        }
         console.log("compute msg list:{}", this.messageList);
         for (let data of this.messageList) {
             let msg = {
@@ -130,6 +134,17 @@ class MessageStore {
                     name: userName,
                 }
             });
+            //set unread
+            let msgGid = msgJson.body.gid;
+            let currentGid = this.activeChat.id;
+            if(msgGid != currentGid) {
+                for (const chat of this.chatList) {
+                    if (chat.msg.gid === msgGid) {
+                        chat.unread = chat.unread + 1;
+                    }
+                }
+            }
+
         }
     }
 
