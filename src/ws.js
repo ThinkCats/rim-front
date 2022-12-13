@@ -1,4 +1,5 @@
 import store from "./store";
+import { uuidv4 } from "./utils";
 
 const ws = new WebSocket("ws://127.0.0.1:3012")
 
@@ -11,7 +12,7 @@ ws.onopen = (event) => {
             "content": "f3ea0ef3-b1b1-453c-8456-8311b6e6413a",
             "uid": 2,
             "gid": 3,
-            "clientMsgId": "lalalalal"
+            "clientMsgId": uuidv4()
         }
     };
     ws.send(JSON.stringify(login));

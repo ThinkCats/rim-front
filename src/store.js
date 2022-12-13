@@ -107,23 +107,31 @@ class MessageStore {
     selectChat(chat) {
         this.activeChat = chat;
         //fetch user info
-        instance.get("/group/user/get?gid="+ chat.id).then(response => {
+        instance.get("/group/user/get?gid=" + chat.id).then(response => {
             console.log("set group user state:", response.data.data)
             this.groupUsers = response.data.data
         });
+        instance.post("/message/group/read", {
+            "gid": chat.id,
+            "uid": this.login.uid,
+        }).then(response => {
+            if (response.data.data === true) {
+                this.fetchChatList();
+            }
+        })
     }
 
     newMessageArrive(msg) {
         console.log("new msg arrived:", msg);
         let msgJson = JSON.parse(msg);
         if (msgJson.event == 'Msg') {
-            console.log("push msg:",msgJson);
+            console.log("push msg:", msgJson);
             let userName = '';
             for (const ele of this.groupUsers) {
                 if (ele.user.id === msgJson.body.uid) {
                     userName = ele.user.name;
                 }
-            } 
+            }
             this.messageList.push({
                 "msg": {
                     uid: msgJson.body.uid,
@@ -137,14 +145,29 @@ class MessageStore {
             //set unread
             let msgGid = msgJson.body.gid;
             let currentGid = this.activeChat.id;
-            if(msgGid != currentGid) {
+            if (msgGid != currentGid) {
                 for (const chat of this.chatList) {
                     if (chat.msg.gid === msgGid) {
                         chat.unread = chat.unread + 1;
                     }
                 }
             }
-
+            //ack msg
+            if (msgGid === currentGid) {
+                let ackMsg = {
+                    "event": "Read",
+                    "body": {
+                        "kind": "Text",
+                        "content": "",
+                        "uid": this.login.uid,
+                        "gid": msgGid,
+                        "clientMsgId": uuidv4(),
+                        "msgId": msgJson.body.msgId,
+                    }
+                };
+                this.ws.send(JSON.stringify(ackMsg));
+                this.fetchChatList();
+            }
         }
     }
 
