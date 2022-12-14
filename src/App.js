@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef } from "react";
-import { MessageBox, MessageList } from "react-chat-elements";
+import { MessageList } from "react-chat-elements";
 import { ChatList } from "react-chat-elements";
 import { Input } from 'react-chat-elements';
 import { Button } from "react-chat-elements";

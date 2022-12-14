@@ -12,6 +12,8 @@ class MessageStore {
 
     login = {}
     ws = {}
+    
+    loginOk = true;
 
     inputMsg = ''
 
@@ -23,6 +25,7 @@ class MessageStore {
             inputMsg: observable,
             groupUsers: observable,
             activeChat: observable,
+            loginOk: observable,
 
             computedChatList: computed,
             computedMessageList: computed,
