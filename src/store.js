@@ -26,7 +26,7 @@ class LoginStore {
     checkLogin() {
         if(!this.loginOk) {
             let token = cookie.load("token");
-            //TODO verify token
+            //TODO verify token, save login user info
             if (token != null && token.length > 0) {
                 this.loginOk = true;
             }
@@ -34,6 +34,7 @@ class LoginStore {
     }
 
     register() {
+        //TODO register a account
         console.log("register:", this.registerInfo);
     }
 
