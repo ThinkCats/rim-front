@@ -4,17 +4,15 @@ import App from './App';
 import reportWebVitals from './other/reportWebVitals';
 import "react-chat-elements/dist/main.css"
 import "./style/custom.css";
-import store from './store';
+import store, { loginStore } from './store';
 import { observer } from 'mobx-react-lite';
 import Login from './login';
 
 store.initLogin();
 store.fetchChatList();
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
-const View = observer(({store}) => {
-  let view = store.loginOk ? <Login store={store} />: <App store={store} />;
+const View = observer(({ store, loginStore }) => {
+  let view = loginStore.loginOk ? <App store={store} /> : <Login loginStore={loginStore} />;
   return (
     <div>
       {view}
@@ -22,9 +20,11 @@ const View = observer(({store}) => {
   )
 })
 
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
-    <View store={store} />
+    <View store={store} loginStore={loginStore} />
   </React.StrictMode>
 );
 

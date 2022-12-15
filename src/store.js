@@ -1,8 +1,65 @@
-import { toHaveAccessibleDescription } from "@testing-library/jest-dom/dist/matchers"
 import { action, computed, makeObservable, observable } from "mobx"
+import cookie from "react-cookies"
 import instance from "./api"
 import { stringToDate, uuidv4 } from "./utils"
 import ws from "./ws"
+
+class LoginStore {
+    loginOk = false;
+    loginInfo = {};
+    registerInfo = {};
+
+    constructor() {
+        makeObservable(this, {
+            loginOk: observable,
+            loginInfo: observable,
+            registerInfo: observable,
+
+            register: action,
+            login: action,
+            updateLoginInfo: action,
+        })
+
+        this.checkLogin();
+    }
+
+    checkLogin() {
+        if(!this.loginOk) {
+            let token = cookie.load("token");
+            //TODO verify token
+            if (token != null && token.length > 0) {
+                this.loginOk = true;
+            }
+        }
+    }
+
+    register() {
+        console.log("register:", this.registerInfo);
+    }
+
+    login() {
+        instance.post("/user/login", loginStore.loginInfo).then(response => {
+            console.log("login result:", response);
+            let token = response.data.data;
+            if(token.length > 0) {
+                cookie.save("token", token);
+                this.loginOk = true;
+            }
+        });
+    }
+
+    updateLoginInfo(type, content) {
+        if(type == 'account') {
+            this.loginInfo.account = content;
+        }
+        if(type == 'password') {
+            this.loginInfo.password= content;
+        }
+    }
+}
+
+export const loginStore = new LoginStore();
+
 
 class MessageStore {
     chatList = []
@@ -12,8 +69,6 @@ class MessageStore {
 
     login = {}
     ws = {}
-    
-    loginOk = true;
 
     inputMsg = ''
 
@@ -25,7 +80,6 @@ class MessageStore {
             inputMsg: observable,
             groupUsers: observable,
             activeChat: observable,
-            loginOk: observable,
 
             computedChatList: computed,
             computedMessageList: computed,
