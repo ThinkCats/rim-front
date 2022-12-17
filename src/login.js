@@ -1,5 +1,14 @@
 import { observer } from "mobx-react-lite";
 
+export const LoginView = observer(({loginStore}) => {
+    
+    const view = loginStore.mode === 0 ? <Login loginStore={loginStore}/> : <Register loginStore={loginStore} />;
+
+    return (
+        <div>{view}</div>
+    );
+})
+
 export const Login = observer(({ loginStore }) => {
 
     const userNameOnChange = (e) => {
@@ -21,7 +30,7 @@ export const Login = observer(({ loginStore }) => {
                 <input type="text" onChange={userNameOnChange} placeholder="Username" />
                 <input type="password" onChange={passwordOnChange} placeholder="password" />
                 <input type="submit" onClick={login} value="Login" />
-                <a>Register</a>
+                <a onClick={() => loginStore.toggleMode(1)}>Register</a>
             </div>
         </div>
     );
@@ -54,6 +63,7 @@ export const Register = observer(({ loginStore }) => {
                 <input type="text" onChange={nickNameOnChange} placeholder="NickName" />
                 <input type="password" onChange={passwordOnChange} placeholder="password" />
                 <input type="submit" onClick={register} value="Register" />
+                <a onClick={() => loginStore.toggleMode(0)}>Back</a>
             </div>
         </div>
     );

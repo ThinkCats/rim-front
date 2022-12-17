@@ -15,6 +15,7 @@ class LoginStore {
             loginOk: observable,
             loginInfo: observable,
             registerInfo: observable,
+            mode: observable,
 
             register: action,
             login: action,
