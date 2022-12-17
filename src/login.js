@@ -18,24 +18,42 @@ export const Login = observer(({ loginStore }) => {
         <div className="loginContainer">
             <div className="box">
                 <h1>Login</h1>
-                <input type="text" onChange={userNameOnChange} name="" placeholder="Username" />
-                <input type="password" onChange={passwordOnChange} name="" placeholder="password" />
-                <input type="submit" onClick={login} name="" value="Login" />
+                <input type="text" onChange={userNameOnChange} placeholder="Username" />
+                <input type="password" onChange={passwordOnChange} placeholder="password" />
+                <input type="submit" onClick={login} value="Login" />
                 <a>Register</a>
             </div>
         </div>
     );
 })
 
-export const Register = observer(({ store }) => {
+export const Register = observer(({ loginStore }) => {
+
+    const userNameOnChange = (e) => {
+        loginStore.updateRegistInfo('account', e.target.value)
+    }
+
+    const passwordOnChange = (e) => {
+        loginStore.updateRegistInfo('password', e.target.value);
+    }
+
+    const nickNameOnChange = (e) => {
+        loginStore.updateRegistInfo('account', e.target.value);
+    }
+
+
+    const register = () => {
+        loginStore.register();
+    }
+
     return (
         <div className="loginContainer">
             <div className="box">
                 <h1>Register Account</h1>
-                <input type="text" name="" placeholder="Username" />
-                <input type="text" name="" placeholder="NickName" />
-                <input type="password" name="" placeholder="password" />
-                <input type="submit" name="" value="Register" />
+                <input type="text" onChange={userNameOnChange} placeholder="Username" />
+                <input type="text" onChange={nickNameOnChange} placeholder="NickName" />
+                <input type="password" onChange={passwordOnChange} placeholder="password" />
+                <input type="submit" onClick={register} value="Register" />
             </div>
         </div>
     );

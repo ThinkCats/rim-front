@@ -8,6 +8,7 @@ class LoginStore {
     loginOk = false;
     loginInfo = {};
     registerInfo = {};
+    mode = 0;
 
     constructor() {
         makeObservable(this, {
@@ -18,13 +19,15 @@ class LoginStore {
             register: action,
             login: action,
             updateLoginInfo: action,
+            updateRegistInfo: action,
+            toggleMode: action,
         })
 
         this.checkLogin();
     }
 
     checkLogin() {
-        if(!this.loginOk) {
+        if (!this.loginOk) {
             let token = cookie.load("token");
             //TODO verify token, save login user info
             if (token != null && token.length > 0) {
@@ -42,7 +45,7 @@ class LoginStore {
         instance.post("/user/login", loginStore.loginInfo).then(response => {
             console.log("login result:", response);
             let token = response.data.data;
-            if(token.length > 0) {
+            if (token.length > 0) {
                 cookie.save("token", token);
                 this.loginOk = true;
             }
@@ -50,12 +53,28 @@ class LoginStore {
     }
 
     updateLoginInfo(type, content) {
-        if(type == 'account') {
+        if (type == 'account') {
             this.loginInfo.account = content;
         }
-        if(type == 'password') {
-            this.loginInfo.password= content;
+        if (type == 'password') {
+            this.loginInfo.password = content;
         }
+    }
+
+    updateRegistInfo(type, content) {
+        if (type == 'account') {
+            this.loginInfo.account = content;
+        }
+        if (type == 'password') {
+            this.loginInfo.password = content;
+        }
+        if (type == 'account') {
+            this.loginInfo.account = content;
+        }
+    }
+
+    toggleMode(mode) {
+        this.mode = mode;
     }
 }
 
