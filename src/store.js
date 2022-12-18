@@ -28,12 +28,14 @@ class LoginStore {
     }
 
     checkLogin() {
-        if (!this.loginOk) {
+        if (this.loginOk) {
             let token = cookie.load("token");
-            //TODO verify token, save login user info
-            if (token != null && token.length > 0) {
-                this.loginOk = true;
-            }
+            instance.get("/user/token?token=" + token).then(response => {
+                let user_data = response.data;
+                if (user_data.code === 200) {
+                    this.loginOk = true;
+                }
+            });
         }
     }
 
@@ -54,22 +56,22 @@ class LoginStore {
     }
 
     updateLoginInfo(type, content) {
-        if (type == 'account') {
+        if (type === 'account') {
             this.loginInfo.account = content;
         }
-        if (type == 'password') {
+        if (type === 'password') {
             this.loginInfo.password = content;
         }
     }
 
     updateRegistInfo(type, content) {
-        if (type == 'account') {
+        if (type === 'account') {
             this.loginInfo.account = content;
         }
-        if (type == 'password') {
+        if (type === 'password') {
             this.loginInfo.password = content;
         }
-        if (type == 'account') {
+        if (type === 'account') {
             this.loginInfo.account = content;
         }
     }
@@ -202,7 +204,7 @@ class MessageStore {
     newMessageArrive(msg) {
         console.log("new msg arrived:", msg);
         let msgJson = JSON.parse(msg);
-        if (msgJson.event == 'Msg') {
+        if (msgJson.event === 'Msg') {
             console.log("push msg:", msgJson);
             let userName = '';
             for (const ele of this.groupUsers) {
@@ -223,7 +225,7 @@ class MessageStore {
             //set unread
             let msgGid = msgJson.body.gid;
             let currentGid = this.activeChat.id;
-            if (msgGid != currentGid) {
+            if (msgGid !== currentGid) {
                 for (const chat of this.chatList) {
                     if (chat.msg.gid === msgGid) {
                         chat.unread = chat.unread + 1;
