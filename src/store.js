@@ -40,7 +40,6 @@ class LoginStore {
     }
 
     register() {
-        //TODO register a account
         console.log("register:", this.registerInfo);
     }
 
