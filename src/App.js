@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { MessageList } from "react-chat-elements";
 import { ChatList } from "react-chat-elements";
 import { Input } from 'react-chat-elements';
@@ -74,24 +74,24 @@ const MessageListView = observer(({ store }) => {
 
 const InputView = observer(({ store }) => {
 
-  const inputRef = useRef(null);
+  const inputReferance = React.useRef();
 
   const handleSubmit = () => {
     store.sendWsMsg(store.inputMsg);
-    inputRef.target = {};
-    //TODO reset
-    inputRef.value = '';
-    inputRef.defaultValue = '';
   }
+
+  let clearRef = (e) => {
+    console.log('clear ref data:',e)
+  };
 
   return (
     <div>
-      <Input className="inputStyle"
+      <Input className="inputStyle" referance={inputReferance}
         placeholder="请输入内容..."
-        multiline={true}
+        multiline={true} 
         rightButtons={<Button text={"Send"} onClick={handleSubmit} title="Send" />}
         onChange={(data) => store.updateInputMsg(data.target.value)}
-        referance={inputRef}
+        clear={(clear) => clearRef = clear}
       />
     </div>
   )

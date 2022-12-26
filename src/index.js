@@ -8,8 +8,8 @@ import store, { loginStore } from './store';
 import { observer } from 'mobx-react-lite';
 import Login, { LoginView } from './login';
 
-// store.initLogin();
-// store.fetchChatList();
+loginStore.checkLogin();
+
 
 const View = observer(({ store, loginStore }) => {
   let view = loginStore.loginOk ? <App store={store} /> : <LoginView loginStore={loginStore} />;

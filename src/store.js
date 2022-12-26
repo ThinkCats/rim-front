@@ -2,7 +2,7 @@ import { action, computed, makeObservable, observable } from "mobx"
 import cookie from "react-cookies"
 import instance from "./api"
 import { stringToDate, uuidv4 } from "./utils"
-import ws from "./ws"
+import ws, { wsLogin } from "./ws"
 
 class LoginStore {
     loginOk = false;
@@ -33,6 +33,7 @@ class LoginStore {
     }
 
     checkLogin() {
+        console.log('check login ...');
         if (this.loginOk) {
             let token = cookie.load("token");
             return instance.get("/user/token?token=" + token).then(response => {
@@ -41,9 +42,16 @@ class LoginStore {
                     this.updateLoginOk(true);
 
                     store.initLogin(user_data.data);
+                    store.fetchChatList();
+                    wsLogin();
                 }
             });
-        } 
+        } else {
+            let token = cookie.load("token");
+            if (!(token === undefined || token.length === 0)) {
+                this.updateLoginOk(true);
+            }
+        }
         return null;
     }
 
