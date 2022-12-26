@@ -47,7 +47,7 @@ export const Register = observer(({ loginStore }) => {
     }
 
     const nickNameOnChange = (e) => {
-        loginStore.updateRegistInfo('account', e.target.value);
+        loginStore.updateRegistInfo('name', e.target.value);
     }
 
 

@@ -18,11 +18,11 @@ instance.interceptors.request.use(
         let cookie_token = cookie.load('token');
         console.log('cookie token:',cookie_token);
         if (cookie_token === undefined || cookie_token.length === 0) {
-            loginStore.loginOk = false;
+            loginStore.updateLoginOk(false);
             return config;
         }
-        loginStore.loginOk = true;
-        // config.headers.Authorization = 'Bearer ' + cookie.load('token');
+        loginStore.updateLoginOk(true);
+        config.headers.Authorization = 'Bearer ' + cookie.load('token');
         return config;
     },
     error => { 

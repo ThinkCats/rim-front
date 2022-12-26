@@ -22,25 +22,41 @@ class LoginStore {
             updateLoginInfo: action,
             updateRegistInfo: action,
             toggleMode: action,
+            updateLoginOk: action,
         })
 
         this.checkLogin();
     }
 
+    updateLoginOk(data) {
+        this.loginOk = data;
+    }
+
     checkLogin() {
         if (this.loginOk) {
             let token = cookie.load("token");
-            instance.get("/user/token?token=" + token).then(response => {
+            return instance.get("/user/token?token=" + token).then(response => {
                 let user_data = response.data;
                 if (user_data.code === 200) {
-                    this.loginOk = true;
+                    this.updateLoginOk(true);
+
+                    store.initLogin(user_data.data);
                 }
             });
-        }
+        } 
+        return null;
     }
 
     register() {
         console.log("register:", this.registerInfo);
+        instance.post("/user/create", loginStore.registerInfo).then(response => {
+            console.log("register result:", response);
+            if(response.data.code === 200) {
+                this.loginInfo.account = this.registerInfo.account;
+                this.loginInfo.password = this.registerInfo.password;
+                this.login();
+            }
+        });
     }
 
     login() {
@@ -49,7 +65,14 @@ class LoginStore {
             let token = response.data.data;
             if (token.length > 0) {
                 cookie.save("token", token);
-                this.loginOk = true;
+                this.updateLoginOk(true);
+
+                let result = this.checkLogin();
+                if (result !== null) {
+                    result.then(data => {
+                        store.fetchChatList();
+                    })
+                }
             }
         });
     }
@@ -65,13 +88,15 @@ class LoginStore {
 
     updateRegistInfo(type, content) {
         if (type === 'account') {
-            this.loginInfo.account = content;
+            this.registerInfo.account = content;
+            this.registerInfo.avatar = "";
+            this.registerInfo.email = "";
         }
         if (type === 'password') {
-            this.loginInfo.password = content;
+            this.registerInfo.password = content;
         }
-        if (type === 'account') {
-            this.loginInfo.account = content;
+        if (type === 'name') {
+            this.registerInfo.name = content;
         }
     }
 
@@ -268,8 +293,8 @@ class MessageStore {
         });
     }
 
-    initLogin() {
-        this.login = { uid: 2, name: "达必马", avatar: "xxxx" };
+    initLogin(data) {
+        this.login = { uid: data.id, name: data.name, avatar: data.avatar };
     }
 }
 
