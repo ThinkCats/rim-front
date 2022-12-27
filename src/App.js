@@ -7,6 +7,9 @@ import { Button } from "react-chat-elements";
 import { Navbar } from "react-chat-elements"
 
 const App = observer(({ store }) => {
+
+  const inputView = (Object.keys(store.activeChat).length === 0) ? null :  <InputView store={store} />;
+  
   return (
     <div className="Container">
       <div className="leftDivContainer">
@@ -15,8 +18,7 @@ const App = observer(({ store }) => {
         </div>
         <div className="navBarContainer">
           <Navbar
-            left=<div>通话</div>
-            center=<div>聊天</div>
+            left=<div>聊天</div>
             right=<div>联系人</div>
             type="light"
           />
@@ -27,7 +29,7 @@ const App = observer(({ store }) => {
           <MessageListView store={store} />
         </div>
         <div className="inputContainer">
-          <InputView store={store} />
+          {inputView}
         </div>
       </div>
     </div>
