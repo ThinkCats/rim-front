@@ -153,7 +153,7 @@ class MessageStore {
     get computedChatList() {
         let result = [];
         for (let data of this.chatList) {
-            console.log('data:', data);
+            console.log('chat list data:', data);
             let computed_chat = {
                 id: data.msg.gid,
                 uid: data.user.id,
